@@ -3,7 +3,7 @@ package books
 import "fmt"
 
 type Book struct {
-	ID     int
+	Id     int
 	Title  string
 	Author string
 	Copies int
@@ -11,25 +11,25 @@ type Book struct {
 
 var catalog = []Book{
 	{
-		ID:     1,
+		Id:     1,
 		Title:  "The Mandalorian",
 		Author: "George Lucas",
 		Copies: 4,
 	},
 	{
-		ID:     2,
+		Id:     2,
 		Title:  "Darth Bane",
 		Author: "Alex Karpashy ",
 		Copies: 2,
 	},
 	{
-		ID:     3,
+		Id:     3,
 		Title:  "The Rule of Two",
 		Author: "Hurst",
 		Copies: 9,
 	},
 	{
-		ID:     4,
+		Id:     4,
 		Title:  "Legacy of Evil",
 		Author: "Someone",
 		Copies: 3,
@@ -49,12 +49,13 @@ func BookToString(book Book) string {
 
 }
 
-func GetBook(ID int) (Book, bool) {
-	for _, book := range catalog {
-		if book.ID == ID {
-			return book, true
+func GetBook(id int, books []Book) (Book,bool) {
+	var localBook Book
+	for _, book := range books {
+		if book.Id == id {
+			localBook = book
 		}
 	}
-
-	return Book{}, false
+if localBook{return localBook}
+	return localBook
 }

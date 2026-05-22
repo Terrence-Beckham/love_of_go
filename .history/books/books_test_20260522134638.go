@@ -4,6 +4,7 @@ import (
 	"books"
 	"slices"
 	"testing"
+
 )
 
 func TestGetAllBooks(t *testing.T) {
@@ -55,13 +56,13 @@ func TestBookToString_FormatsBookInfoAsString(t *testing.T) {
 
 func TestGetBook_ReturnCorrectBook(t *testing.T) {
 	t.Parallel()
-	want := books.Book{
+		want := books.Book{
 		ID:     4,
 		Title:  "Legacy of Evil",
 		Author: "Someone",
 		Copies: 3,
 	}
-	got, ok := books.GetBook(4)
+	got ,ok := books.GetBook(4)
 	if !ok {
 		t.Fatal("Book not found")
 	}
@@ -73,14 +74,20 @@ func TestGetBook_ReturnCorrectBook(t *testing.T) {
 }
 func TestGetBook_ReturnsFalseIfNotFound(t *testing.T) {
 	t.Parallel()
-
-	_, ok := books.GetBook(12)
+		want := books.Book{
+		ID:     4,
+		Title:  "Legacy of Evil",
+		Author: "Someone",
+		Copies: 3,
+	}
+	got ,ok := books.GetBook(12)
 	if ok {
-		t.Fatal("Nonexistent ID")
+		t.Fatal("Book  found")
 	}
 
-	if ok {
-		t.Fatal("Want false for nonexistent ID got true")
+	if want != got {
+		t.Fatalf("want %#v, got %#v", want, got)
 	}
 
 }
+

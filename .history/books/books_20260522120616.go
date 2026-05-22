@@ -49,9 +49,9 @@ func BookToString(book Book) string {
 
 }
 
-func GetBook(ID int) (Book, bool) {
+func GetBook(ID int, books []Book) (Book, bool) {
 	for _, book := range catalog {
-		if book.ID == ID {
+		if book.ID ==  {
 			return book, true
 		}
 	}
