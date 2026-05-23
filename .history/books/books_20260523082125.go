@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
-)
+	)
 
 type Book struct {
 	ID     string
@@ -57,6 +57,8 @@ func GetBook(ID string) (Book, bool) {
 	book, ok := Catalog[ID]
 	return book, ok
 }
-func AddBook(book Book)  {
-	Catalog[book.ID] = book
+func AddBook(book Book) (Book, bool) {
+ Catalog["122"] = book 
+ 
+	return Book{}, false
 }

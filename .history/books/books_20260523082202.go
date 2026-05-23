@@ -57,6 +57,7 @@ func GetBook(ID string) (Book, bool) {
 	book, ok := Catalog[ID]
 	return book, ok
 }
-func AddBook(book Book)  {
+func AddBook(book Book) (Book, bool) {
 	Catalog[book.ID] = book
+	return Book{}, false
 }
