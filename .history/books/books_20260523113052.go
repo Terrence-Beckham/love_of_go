@@ -13,21 +13,31 @@ type Book struct {
 	Copies int
 }
 
-var Catalog = map[string]Book{
-	"def": {
-		ID:     "def",
-		Title:  "Darth Bane",
-		Author: "Alex Karpashy ",
-		Copies: 2,
-	},
+var Catalog == map[string]Book{
 	"abc": {
 		ID:     "abc",
 		Title:  "The Mandalorian",
 		Author: "George Lucas",
 		Copies: 4,
 	},
-
-	
+	"def": {
+		ID:     "def",
+		Title:  "Darth Bane",
+		Author: "Alex Karpashy ",
+		Copies: 2,
+	},
+	"jkl": {
+		ID:     "jkl",
+		Title:  "The Rule of Two",
+		Author: "Hurst",
+		Copies: 9,
+	},
+	"mno": {
+		ID:     "mno",
+		Title:  "Legacy of Evil",
+		Author: "Someone",
+		Copies: 3,
+	},
 }
 
 func GetAllBooks(catalog map[string]Book) []Book {

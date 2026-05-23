@@ -9,12 +9,6 @@ import (
 
 func GetTestCatalog() map[string]books.Book {
 return 	 map[string]books.Book{
-	"def": {
-		ID:     "def",
-		Title:  "Darth Bane",
-		Author: "Alex Karpashy ",
-		Copies: 2,
-	},
 	"abc": {
 		ID:     "abc",
 		Title:  "The Mandalorian",

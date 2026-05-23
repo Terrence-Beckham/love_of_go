@@ -14,20 +14,30 @@ type Book struct {
 }
 
 var Catalog = map[string]Book{
-	"def": {
-		ID:     "def",
-		Title:  "Darth Bane",
-		Author: "Alex Karpashy ",
-		Copies: 2,
-	},
 	"abc": {
 		ID:     "abc",
 		Title:  "The Mandalorian",
 		Author: "George Lucas",
 		Copies: 4,
 	},
-
-	
+	"def": {
+		ID:     "def",
+		Title:  "Darth Bane",
+		Author: "Alex Karpashy ",
+		Copies: 2,
+	},
+	"jkl": {
+		ID:     "jkl",
+		Title:  "The Rule of Two",
+		Author: "Hurst",
+		Copies: 9,
+	},
+	"mno": {
+		ID:     "mno",
+		Title:  "Legacy of Evil",
+		Author: "Someone",
+		Copies: 3,
+	},
 }
 
 func GetAllBooks(catalog map[string]Book) []Book {
@@ -48,8 +58,8 @@ func BookToString(book Book) string {
 }
 
 func GetBook(catalog map[string]Book, ID string) (Book, bool) {
-	book, ok := catalog[ID]
-	return book, ok
+	return var book, ok = catalog[ID]
+	
 }
 func AddBook(book Book) {
 	Catalog[book.ID] = book

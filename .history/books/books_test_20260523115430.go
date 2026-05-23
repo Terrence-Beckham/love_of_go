@@ -8,13 +8,12 @@ import (
 )
 
 func GetTestCatalog() map[string]books.Book {
-return 	 map[string]books.Book{
-	"def": {
+r	"def": {
 		ID:     "def",
 		Title:  "Darth Bane",
 		Author: "Alex Karpashy ",
 		Copies: 2,
-	},
+	},eturn 	 map[string]books.Book{
 	"abc": {
 		ID:     "abc",
 		Title:  "The Mandalorian",

@@ -9,20 +9,30 @@ import (
 
 func GetTestCatalog() map[string]books.Book {
 return 	 map[string]books.Book{
-	"def": {
-		ID:     "def",
-		Title:  "Darth Bane",
-		Author: "Alex Karpashy ",
-		Copies: 2,
-	},
 	"abc": {
 		ID:     "abc",
 		Title:  "The Mandalorian",
 		Author: "George Lucas",
 		Copies: 4,
 	},
-
-	
+	"def": {
+		ID:     "def",
+		Title:  "Darth Bane",
+		Author: "Alex Karpashy ",
+		Copies: 2,
+	},
+	"jkl": {
+		ID:     "jkl",
+		Title:  "The Rule of Two",
+		Author: "Hurst",
+		Copies: 9,
+	},
+	"mno": {
+		ID:     "mno",
+		Title:  "Legacy of Evil",
+		Author: "Someone",
+		Copies: 3,
+	},
 }
 }
 
@@ -30,20 +40,19 @@ func TestGetAllBooks(t *testing.T) {
 	t.Parallel()
 	var catalog = GetTestCatalog()
 	want := []books.Book{
-	{
-			ID:     "def",
-			Title:  "Darth Bane",
-			Author: "Alex Karpashy ",
-			Copies: 2,
-		},
 		{
 			ID:     "abc",
 			Title:  "The Mandalorian",
 			Author: "George Lucas",
 			Copies: 4,
 		},
-	
-		
+		{
+			ID:     "def",
+			Title:  "Darth Bane",
+			Author: "Alex Karpashy ",
+			Copies: 2,
+		},
+		x
 	}
 
 	got := books.GetAllBooks(catalog)

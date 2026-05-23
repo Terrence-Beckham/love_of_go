@@ -9,41 +9,61 @@ import (
 
 func GetTestCatalog() map[string]books.Book {
 return 	 map[string]books.Book{
-	"def": {
-		ID:     "def",
-		Title:  "Darth Bane",
-		Author: "Alex Karpashy ",
-		Copies: 2,
-	},
 	"abc": {
 		ID:     "abc",
 		Title:  "The Mandalorian",
 		Author: "George Lucas",
 		Copies: 4,
 	},
-
-	
+	"def": {
+		ID:     "def",
+		Title:  "Darth Bane",
+		Author: "Alex Karpashy ",
+		Copies: 2,
+	},
+	"jkl": {
+		ID:     "jkl",
+		Title:  "The Rule of Two",
+		Author: "Hurst",
+		Copies: 9,
+	},
+	"mno": {
+		ID:     "mno",
+		Title:  "Legacy of Evil",
+		Author: "Someone",
+		Copies: 3,
+	},
 }
 }
 
 func TestGetAllBooks(t *testing.T) {
 	t.Parallel()
 	var catalog = GetTestCatalog()
-	want := []books.Book{
-	{
-			ID:     "def",
-			Title:  "Darth Bane",
-			Author: "Alex Karpashy ",
-			Copies: 2,
-		},
+	 := []books.Book{
 		{
 			ID:     "abc",
 			Title:  "The Mandalorian",
 			Author: "George Lucas",
 			Copies: 4,
 		},
-	
-		
+		{
+			ID:     "def",
+			Title:  "Darth Bane",
+			Author: "Alex Karpashy ",
+			Copies: 2,
+		},
+		{
+			ID:     "jkl",
+			Title:  "The Rule of Two",
+			Author: "Hurst",
+			Copies: 9,
+		},
+		{
+			ID:     "mno",
+			Title:  "Legacy of Evil",
+			Author: "Someone",
+			Copies: 3,
+		},
 	}
 
 	got := books.GetAllBooks(catalog)
@@ -51,7 +71,7 @@ func TestGetAllBooks(t *testing.T) {
 		return cmp.Compare(a.Author, b.Author)
 	})
 
-	if !slices.Equal(want, got) {
+	if slices.Equal(want, got) {
 		t.Fatalf("want %#v, got %#v", want, got)
 	}
 
