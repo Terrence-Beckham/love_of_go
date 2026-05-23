@@ -32,16 +32,16 @@ var Catalog = map[string]Book{
 		Author: "Hurst",
 		Copies: 9,
 	},
-	"mno": {
-		ID:     "mno",
+	"123": {
+		ID:     "123",
 		Title:  "Legacy of Evil",
 		Author: "Someone",
 		Copies: 3,
 	},
 }
 
-func GetAllBooks(catalog map[string]Book) []Book {
-	return slices.Collect(maps.Values(catalog))
+func GetAllBooks() []Book {
+	return slices.Collect(maps.Values(Catalog))
 }
 
 func PrintBook(book Book) {
@@ -53,8 +53,8 @@ func BookToString(book Book) string {
 
 }
 
-func GetBook(catalog map[string]Book,ID string) (Book, bool) {
-	book, ok := catalog[ID]
+func GetBook(ID string) (Book, bool) {
+	book, ok := Catalog[ID]
 	return book, ok
 }
 func AddBook(book Book)  {

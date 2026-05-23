@@ -53,8 +53,8 @@ func BookToString(book Book) string {
 
 }
 
-func GetBook(catalog map[string]Book,ID string) (Book, bool) {
-	book, ok := catalog[ID]
+func GetBook(catalog []ID string) (Book, bool) {
+	book, ok := Catalog[ID]
 	return book, ok
 }
 func AddBook(book Book)  {

@@ -130,9 +130,7 @@ var catalog = GetTestCatalog()
 
 func TestAddBook(t *testing.T) {
 	t.Parallel()
-
-var catalog = GetTestCatalog()
-	_,ok := books.GetBook(catalog,"123")
+	_,ok := books.GetBook(books.Catalog,"123")
 	if ok {
 		t.Fatal("The book already exists")
 	}
