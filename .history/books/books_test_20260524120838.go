@@ -138,11 +138,3 @@ func TestSetCopies_SetsNumberOfCopiesToGivenValue(t *testing.T) {
 		t.Errorf("want 12 copies, got %d", book.Copies)
 	}
 }
-func TestSetCopies_ReturnsErrorIfCopiesNegative(t *testing.T) {
-    t.Parallel()
-    book := books.Book{}
-    err := book.SetCopies(-1)
-    if err == nil {
-        t.Error("want error for negative copies, got nil")
-    }
-}

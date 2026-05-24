@@ -54,12 +54,8 @@ func (catalog Catalog) GetBook(ID string) (Book, bool) {
 }
 func (catalog Catalog) AddBook(book Book) {
 	catalog[book.ID] = book
-}
-func (book *Book) SetCopies(copies int) error {
-	if copies < 0 {
-		return fmt.Errorf("negative number of copies: %d", copies)
-	}
+}mt.Println("before update book.Copies =",book.Copies)
 	book.Copies = copies
-	fmt.Println("after update book.Copies =", book.Copies)
+	fmt.Println("after update book.Copies =",book.Copies)
 	return nil
 }
