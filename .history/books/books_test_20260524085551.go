@@ -131,6 +131,6 @@ func TestSetCopies_SetsNumberOfCopiesToGivenValue(t *testing.T){
 	}
 	book.SetCopies(12)
 	if book.Copies != 12{
-		t.Errorf("want 12 copies, got %d", book.Copies)
+		t.Errorf("want 12 copies, got %d, book.")
 	}
 }

@@ -55,7 +55,7 @@ func (catalog Catalog) GetBook(ID string) (Book, bool) {
 func (catalog Catalog) AddBook(book Book) {
 	catalog[book.ID] = book
 }
-func (book Book) SetCopies(copies int) Book {
-	book.Copies = copies
-	return book
+func (book Book) SetCopies(copies int) Book{
+ book.Copies = copies 
+ re
 }

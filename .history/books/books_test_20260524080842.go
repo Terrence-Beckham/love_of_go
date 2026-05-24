@@ -8,7 +8,7 @@ import (
 )
 
 func GetTestCatalog() books.Catalog {
-	return books.Catalog{
+	return {
 		"def": {
 			ID:     "def",
 			Title:  "Darth Bane",
@@ -122,15 +122,5 @@ func TestAddBook(t *testing.T) {
 	_, ok = catalog.GetBook("123")
 	if !ok {
 		t.Fatal("added book not found")
-	}
-}
-func TestSetCopies_SetsNumberOfCopiesToGivenValue(t *testing.T){
-	t.Parallel()
-	book := books.Book{
-		Copies:5,
-	}
-	book.SetCopies(12)
-	if book.Copies != 12{
-		t.Errorf("want 12 copies, got %d", book.Copies)
 	}
 }

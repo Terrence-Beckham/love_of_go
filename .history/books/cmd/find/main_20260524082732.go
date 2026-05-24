@@ -11,10 +11,8 @@ func main() {
 		fmt.Println("Usage: find <Book ID>")
 		return
 	}
-
-	catalog := books.GetCatalog()
 	ID := os.Args[1]
-	book, ok := catalog.GetBook(ID)
+	book, ok := books.Local.GetBook(ID)
 	if !ok {
 		fmt.Println("Sorry, I couldn't find that book in the catalog.")
 		return

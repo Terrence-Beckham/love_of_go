@@ -14,22 +14,22 @@ type Book struct {
 }
 type Catalog map[string]Book
 
-func GetCatalog() Catalog {
-	return Catalog{
-		"def": {
-			ID:     "def",
-			Title:  "Darth Bane",
-			Author: "Alex Karpashy ",
-			Copies: 2,
-		},
-		"abc": {
-			ID:     "abc",
-			Title:  "The Mandalorian",
-			Author: "George Lucas",
-			Copies: 4,
-		},
-	}
+func  GetCatalog() []Book{
+	"def": {
+		ID:     "def",
+		Title:  "Darth Bane",
+		Author: "Alex Karpashy ",
+		Copies: 2,
+	},
+	"abc": {
+		ID:     "abc",
+		Title:  "The Mandalorian",
+		Author: "George Lucas",
+		Copies: 4,
+	},
 }
+
+
 
 func (catalog Catalog) GetAllBooks() []Book {
 	var newCollection = slices.Collect(maps.Values(catalog))
@@ -48,14 +48,10 @@ func (book Book) BookToString() string {
 
 }
 
-func (catalog Catalog) GetBook(ID string) (Book, bool) {
+func (catalog Catalog) GetBook( ID string) (Book, bool) {
 	book, ok := catalog[ID]
 	return book, ok
 }
 func (catalog Catalog) AddBook(book Book) {
 	catalog[book.ID] = book
-}
-func (book Book) SetCopies(copies int) Book {
-	book.Copies = copies
-	return book
 }
