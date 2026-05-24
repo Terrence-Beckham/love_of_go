@@ -6,6 +6,8 @@ import (
 	"cmp"
 	"slices"
 	"testing"
+	"os"
+	
 )
 
 func GetTestCatalog() books.Catalog {

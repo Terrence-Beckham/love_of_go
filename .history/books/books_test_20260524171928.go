@@ -1,6 +1,5 @@
 package books_test
 
-
 import (
 	"books"
 	"cmp"
@@ -159,7 +158,7 @@ func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
 			Title: "In the Company of Cheerful Ladies",
 			Author: "Alexander McCall Smith",
 			Copies: 1,
-			ID: "abc",
+			Id: "abc",
 
 		},
 		{

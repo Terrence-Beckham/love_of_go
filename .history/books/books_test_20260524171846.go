@@ -1,6 +1,5 @@
 package books_test
 
-
 import (
 	"books"
 	"cmp"
@@ -159,7 +158,7 @@ func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
 			Title: "In the Company of Cheerful Ladies",
 			Author: "Alexander McCall Smith",
 			Copies: 1,
-			ID: "abc",
+			Id: "abc",
 
 		},
 		{
@@ -170,10 +169,10 @@ func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
 		},
 	}
 	got := catalog.GetAllBooks()
-	slices.SortFunc(got, func(a, b books.Book) int{
+	slices.SortFunc(got, func(a, b, books.Book) int{
 		return cmp.Compare(a.Author, b.Author)
 	})
 	if !slices.Equal(want, got){
-		t.Fatalf("want %#v, got %#v",want, got)
+		t.FatalF("want %#")
 	}
 }

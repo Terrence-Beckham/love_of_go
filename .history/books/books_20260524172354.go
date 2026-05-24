@@ -1,7 +1,6 @@
 package books
 
 import (
-	"encoding/json"
 	"fmt"
 	"maps"
 	"os"
@@ -67,18 +66,5 @@ func (book *Book) SetCopies(copies int) error {
 }
 func OpenCatalog(path string) (Catalog, error){
 	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	catalog := Catalog{}
-	var decoder = json.NewDecoder(file)
-	err = decoder.Decode(&catalog)
-	// err = json.NewDecoder(file).Decode(&catalog)
-	if err != nil {
-		return nil, err
-	}
-	return catalog, nil
+	
 }
-
-
