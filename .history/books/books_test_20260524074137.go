@@ -112,14 +112,14 @@ func TestAddBook(t *testing.T) {
 	if ok {
 		t.Fatal("The book already exists")
 	}
-	catalog.AddBook(books.Book{
+	books.AddBook(books.Book{
 		ID:     "123",
 		Title:  "New Glory",
 		Author: "Me Again",
 		Copies: 25,
 	})
 
-	_, ok =catalog.GetBook( "123")
+	_, ok = books.GetBook(books.Catalog, "123")
 	if !ok {
 		t.Fatal("added book not found")
 	}

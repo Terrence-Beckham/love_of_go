@@ -14,7 +14,7 @@ type Book struct {
 }
 type Catalog map[string]Book
 
-var LocalCatalog = Catalog{
+var atalog = Catalog{
 	"def": {
 		ID:     "def",
 		Title:  "Darth Bane",

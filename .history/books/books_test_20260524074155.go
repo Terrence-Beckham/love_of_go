@@ -119,7 +119,7 @@ func TestAddBook(t *testing.T) {
 		Copies: 25,
 	})
 
-	_, ok =catalog.GetBook( "123")
+	_, ok =catalog.GetBook(log, "123")
 	if !ok {
 		t.Fatal("added book not found")
 	}

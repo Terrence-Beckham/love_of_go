@@ -14,7 +14,7 @@ type Book struct {
 }
 type Catalog map[string]Book
 
-var LocalCatalog = Catalog{
+var catalog = Catalog{
 	"def": {
 		ID:     "def",
 		Title:  "Darth Bane",
@@ -46,10 +46,10 @@ func (book Book) BookToString() string {
 
 }
 
-func (catalog Catalog) GetBook( ID string) (Book, bool) {
+func (catalog Catalog) GetBook(catalog map[string]Book, ID string) (Book, bool) {
 	book, ok := catalog[ID]
 	return book, ok
 }
-func (catalog Catalog) AddBook(book Book) {
-	catalog[book.ID] = book
+func AddBook(book Book) {
+	Catalog[book.ID] = book
 }

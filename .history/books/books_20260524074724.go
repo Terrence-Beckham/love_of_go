@@ -14,7 +14,7 @@ type Book struct {
 }
 type Catalog map[string]Book
 
-var LocalCatalog = Catalog{
+var Catalog = Catalog{
 	"def": {
 		ID:     "def",
 		Title:  "Darth Bane",
@@ -31,6 +31,7 @@ var LocalCatalog = Catalog{
 
 func (catalog Catalog) GetAllBooks() []Book {
 	var newCollection = slices.Collect(maps.Values(catalog))
+	ca
 	for _, book := range newCollection {
 		fmt.Printf("This is the book %#v", book)
 	}

@@ -12,9 +12,8 @@ type Book struct {
 	Author string
 	Copies int
 }
-type Catalog map[string]Book
 
-var LocalCatalog = Catalog{
+var Catalog = map[string]Book{
 	"def": {
 		ID:     "def",
 		Title:  "Darth Bane",
@@ -27,12 +26,14 @@ var LocalCatalog = Catalog{
 		Author: "George Lucas",
 		Copies: 4,
 	},
+
+	
 }
 
-func (catalog Catalog) GetAllBooks() []Book {
+func GetAllBooks(catalog map[string]Book) []Book {
 	var newCollection = slices.Collect(maps.Values(catalog))
-	for _, book := range newCollection {
-		fmt.Printf("This is the book %#v", book)
+	for _,book := range newCollection{
+		fmt.Printf("This is the book %#v",book)
 	}
 	return newCollection
 }
@@ -41,15 +42,15 @@ func PrintBook(book Book) {
 	fmt.Printf("%v by %v - %v copies", book.Title, book.Author, book.Copies)
 
 }
-func (book Book) BookToString() string {
+func(book Book) BookToString() string {
 	return fmt.Sprintf("%v by %v (copies: %v)", book.Title, book.Author, book.Copies)
 
 }
 
-func (catalog Catalog) GetBook( ID string) (Book, bool) {
+func GetBook(catalog map[string]Book, ID string) (Book, bool) {
 	book, ok := catalog[ID]
 	return book, ok
 }
-func (catalog Catalog) AddBook(book Book) {
-	catalog[book.ID] = book
+func AddBook(book Book) {
+	Catalog[book.ID] = book
 }
