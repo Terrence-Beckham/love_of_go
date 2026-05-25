@@ -1,11 +1,11 @@
 package books_test
 
+
 import (
 	"books"
 	"cmp"
 	"slices"
 	"testing"
-
 )
 
 func GetTestCatalog() books.Catalog {
@@ -156,52 +156,38 @@ func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
 	}
 	want := []books.Book{
 		{
-			Title:  "In the Company of Cheerful Ladies",
+			Title: "In the Company of Cheerful Ladies",
 			Author: "Alexander McCall Smith",
 			Copies: 1,
-			ID:     "abc",
+			ID: "abc",
+
 		},
 		{
-			Title:  "White Heat",
+			Title: "White Heat",
 			Author: "Dominic Sanbrook",
 			Copies: 2,
-			ID:     "xyz",
+			ID: "xyz",
 		},
 	}
 	got := catalog.GetAllBooks()
-	slices.SortFunc(got, func(a, b books.Book) int {
+	slices.SortFunc(got, func(a, b books.Book) int{
 		return cmp.Compare(a.Author, b.Author)
 	})
-	if !slices.Equal(want, got) {
-		t.Fatalf("want %#v, got %#v", want, got)
+	if !slices.Equal(want, got){
+		t.Fatalf("want %#v, got %#v",want, got)
 	}
 }
 
-// func TestSyncBook_ChecksBookToSeeIfUpdated(t *testing.T) {
-// 	t.Parallel()
-// 	input := books.Book{
-// 		ID:     "abc",
-// 		Title:  "New Book",
-// 		Author: "Terrence",
-// 		Copies: 4,
-// 	}
-// 	err:= input.SetCopies(10)
-// 	if err != nil {
-// 		t.Fatal("Failed updating book")
-// 	}
+func TestSyncBook_ChecksBookToSeeIfUpdated(t *testing.T)  {
+	t.Parallel()
+input := {
+			ID:     "def",
+			Title:  "Darth Bane",
+			Author: "Alex Karpashy ",
+			Copies: 2,
+		},
+	}
 
-// 	err = input.SyncCopies()
 
-// 	if err != nil {
-// 		t.Fatal("Syncing copies failed")
-// 	}
 
-// 	updatedCatalog := catalog.GetAllBooks()
-// 	want:= input.Copies 
-// 	got := updatedCatalog["abc"].Copies
-	
-// 	if want != got {
-// 		t.Fatalf("Copies before the update %q, not equal to copies after the update %q", want, got)
-// 	}
-
-// }
+}

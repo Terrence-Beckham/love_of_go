@@ -177,31 +177,30 @@ func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
 	}
 }
 
-// func TestSyncBook_ChecksBookToSeeIfUpdated(t *testing.T) {
-// 	t.Parallel()
-// 	input := books.Book{
-// 		ID:     "abc",
-// 		Title:  "New Book",
-// 		Author: "Terrence",
-// 		Copies: 4,
-// 	}
-// 	err:= input.SetCopies(10)
-// 	if err != nil {
-// 		t.Fatal("Failed updating book")
-// 	}
+func TestSyncBook_ChecksBookToSeeIfUpdated(t *testing.T) {
+	t.Parallel()
+	input := books.Book{
+		ID:     "abc",
+		Title:  "New Book",
+		Author: "Terrence",
+		Copies: 4,
+	}
+	err:= input.SetCopies(10)
+	if err != nil {
+		t.Fatal("Failed updating book")
+	}
 
-// 	err = input.SyncCopies()
+	err = input.SyncCopies()
+	if err != nil {
+		t.Fatal("Syncing copies failed")
+	}
 
-// 	if err != nil {
-// 		t.Fatal("Syncing copies failed")
-// 	}
-
-// 	updatedCatalog := catalog.GetAllBooks()
-// 	want:= input.Copies 
-// 	got := updatedCatalog["abc"].Copies
+	updatedCatalog := catalog.GetAllBooks()
+	want:= input.Copies 
+	got := updatedCatalog["abc"].Copies
 	
-// 	if want != got {
-// 		t.Fatalf("Copies before the update %q, not equal to copies after the update %q", want, got)
-// 	}
+	if want != got {
+		t.Fatalf("Copies before the update %q, not equal to copies after the update %q", want, got)
+	}
 
-// }
+}

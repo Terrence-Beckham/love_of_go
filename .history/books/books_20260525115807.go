@@ -67,6 +67,6 @@ func OpenCatalog(path string) (Catalog, error){
 }
 
 
-func (catalog Catalog)SyncCopies(book Book) Book  {
-return Book{}	
+func SyncCopies()  {
+	
 }
