@@ -14,8 +14,7 @@ func main() {
 
 	catalog,err := books.OpenCatalog("testdata/catalog")
 	if err != nil{
-		fmt.Printf("opening catalog: %v/n", err)
-		return
+		fmt.Printf("open")
 	}
 	ID := os.Args[1]
 	book, ok := catalog.GetBook(ID)
@@ -24,4 +23,5 @@ func main() {
 		return
 	}
 	fmt.Println(book)
+
 }
