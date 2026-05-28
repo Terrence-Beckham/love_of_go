@@ -160,13 +160,7 @@ func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
 	catalog := GetTestCatalog()
 	err := catalog.Sync("testdata/catalog.new")
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal
 	}
-	newCatalog, err := books.OpenCatalog("testdata/catalog.new")
-	if err != nil {
-		t.Fatal(err)
-	}
-	booklist := newCatalog.GetAllBooks()
-	assertTestBooks(t, booklist)
 	
 }

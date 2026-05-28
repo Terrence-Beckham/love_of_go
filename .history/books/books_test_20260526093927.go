@@ -155,7 +155,7 @@ func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
 	assertTestBooks(t, bookList)
 }
 
-func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
+func TestSyncWritesCatalogDataToFile(t *testing.T) {
 	t.Parallel()
 	catalog := GetTestCatalog()
 	err := catalog.Sync("testdata/catalog.new")
@@ -166,7 +166,26 @@ func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
 	if err != nil {
 		t.Fatal(err)
 	}
-	booklist := newCatalog.GetAllBooks()
-	assertTestBooks(t, booklist)
-	
+
+	want := []books.Book{
+		{
+			Title:  "In the Company of Cheerful Ladies",
+			Author: "Alexander McCall Smith",
+			Copies: 1,
+			ID:     "abc",
+		},
+		{
+			Title:  "White Heat",
+			Author: "Dominic Sandbrook",
+			Copies: 2,
+			ID:     "xyz",
+		},
+	}
+	got := newCatalog.GetAllBooks()
+	slices.SortFunc(got, func(a, b books.Book) int {
+		return cmp.Compare(a.Author, b.Author)
+	})
+	if !slices.Equal(want, got) {
+		t.Fatalf("want %#v, got %#v", want, got)
+	}
 }
