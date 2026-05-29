@@ -11,7 +11,7 @@ func GetTestCatalog() books.Catalog {
 	return books.Catalog{
 		"abc": {
 			ID:     "abc",
-			Title:"In the Company of Cheerful Ladies" ,
+			Title:  "In the Company of Cheerful Ladies",
 			Author: "Alexander McCall Smith",
 			Copies: 1,
 		},
@@ -155,7 +155,7 @@ func TestSetCopies_ReturnsErrorIfCopiesNegative(t *testing.T) {
 // 	assertTestBooks(t, bookList)
 // }
 
-func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
+func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T) {
 	t.Parallel()
 	catalog := GetTestCatalog()
 	err := catalog.Sync("testdata/catalog.new")
@@ -168,25 +168,67 @@ func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
 	}
 	booklist := newCatalog.GetAllBooks()
 	assertTestBooks(t, booklist)
-	
+
 }
 
-func TestSetCopies_OnCatalogModifiesSecifiedBook(t *testing.T)  {
+func TestSetCopies_OnCatalogModifiesSecifiedBook(t *testing.T) {
 	t.Parallel()
 	catalog := GetTestCatalog()
 	book, ok := catalog.GetBook("abc")
-	if !ok{
+	if !ok {
 		t.Fatal("book not found")
 	}
 	if book.Copies != 1 {
 		t.Fatalf("want 1 copy before change, got %d", book.Copies)
 	}
-	err := catalog.SetCopies("abc",2)
-if err != nil {
-	t.Fatal(err)
-}	
-book.ok = catalog.GetBook("abc")
-if !ok {
-	t.Fatal("book not found")
+	err := catalog.SetCopies("abc", 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	book, ok = catalog.GetBook("abc")
+	if !ok {
+		t.Fatal("book not found")
+	}
+	if book.Copies != 2 {
+		t.Fatalf("want 2 copies after change, got %d", book.Copies)
+
+	}
 }
+func TestAddBook_ReturnsErrorIfIDExists(t *testing.T) {
+    t.Parallel()
+    catalog := GetTestCatalog()
+    _, ok := catalog.GetBook("abc")
+    if !ok {
+        t.Fatal("book not present")
+    }
+    err := catalog.AddBook(books.Book{
+        ID:     "abc",
+        Title:  "In the Company of Cheerful Ladies",
+        Author: "Alexander McCall Smith",
+        Copies: 1,
+    })
+    if err == nil {
+        t.Fatal("want error for duplicate ID, got nil")
+    }
+}
+func TestAddBook_AddsGivenBookToCatalog(t *testing.T) {
+    t.Parallel()
+    catalog := GetTestCatalog()
+    _, ok := catalog.GetBook("123")
+    if ok {
+        t.Fatal("book already present")
+    }
+    err := catalog.AddBook(books.Book{
+        ID:     "123",
+        Title:  "The Prize of all the Oceans",
+        Author: "Glyn Williams",
+        Copies: 2,
+    })
+    if err != nil {
+        t.Fatal(err)
+    }
+    _, ok = catalog.GetBook("123")
+    if !ok {
+        t.Fatal("added book not found")
+    }
 }
