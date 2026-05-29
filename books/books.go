@@ -67,6 +67,15 @@ func OpenCatalog(path string) (Catalog, error){
 }
 
 
-func (catalog Catalog)Sync(newCatalog string)   {
-return Book{}	
+func (catalog Catalog)Sync(path string) error  {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	err = json.NewEncoder(file).Encode(catalog)
+	if err != nil {
+		return  err
+	}
+return nil	
 }

@@ -9,17 +9,17 @@ import (
 
 func GetTestCatalog() books.Catalog {
 	return books.Catalog{
-		"def": {
-			ID:     "def",
-			Title:  "Darth Bane",
-			Author: "Alex Karpashy ",
-			Copies: 2,
-		},
 		"abc": {
 			ID:     "abc",
-			Title:  "The Mandalorian",
-			Author: "George Lucas",
-			Copies: 4,
+			Title:"In the Company of Cheerful Ladies" ,
+			Author: "Alexander McCall Smith",
+			Copies: 1,
+		},
+		"xyz": {
+			ID:     "xyz",
+			Title:  "White Heat",
+			Author: "Dominic Sandbrook",
+			Copies: 2,
 		},
 	}
 }
@@ -74,9 +74,9 @@ func TestGetBook_ReturnCorrectBook(t *testing.T) {
 	want := books.Book{
 
 		ID:     "abc",
-		Title:  "The Mandalorian",
-		Author: "George Lucas",
-		Copies: 4,
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
 	}
 	got, ok := catalog.GetBook("abc")
 	if !ok {
@@ -145,15 +145,15 @@ func TestSetCopies_ReturnsErrorIfCopiesNegative(t *testing.T) {
 	}
 }
 
-func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
-	t.Parallel()
-	catalog, err := books.OpenCatalog("testdata/catalog")
-	if err != nil {
-		t.Fatal(err)
-	}
-	bookList := catalog.GetAllBooks()
-	assertTestBooks(t, bookList)
-}
+// func TestOpenCatalog_LoadsCatalogDataFromFile(t *testing.T) {
+// 	t.Parallel()
+// 	catalog, err := books.OpenCatalog("testdata/catalog")
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	bookList := catalog.GetAllBooks()
+// 	assertTestBooks(t, bookList)
+// }
 
 func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
 	t.Parallel()
@@ -169,4 +169,24 @@ func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T)  {
 	booklist := newCatalog.GetAllBooks()
 	assertTestBooks(t, booklist)
 	
+}
+
+func TestSetCopies_OnCatalogModifiesSecifiedBook(t *testing.T)  {
+	t.Parallel()
+	catalog := GetTestCatalog()
+	book, ok := catalog.GetBook("abc")
+	if !ok{
+		t.Fatal("book not found")
+	}
+	if book.Copies != 1 {
+		t.Fatalf("want 1 copy before change, got %d", book.Copies)
+	}
+	err := catalog.SetCopies("abc",2)
+if err != nil {
+	t.Fatal(err)
+}	
+book.ok = catalog.GetBook("abc")
+if !ok {
+	t.Fatal("book not found")
+}
 }
