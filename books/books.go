@@ -6,6 +6,7 @@ import (
 	"maps"
 	"os"
 	"slices"
+	"sync"
 )
 
 type Book struct {
@@ -14,10 +15,14 @@ type Book struct {
 	Author string
 	Copies int
 }
-type Catalog map[string]Book
+type Catalog struct {
+	mu *sync.RWMutex
+	data map[string]Book
+	Path string
+}	
 
-func (catalog Catalog) GetAllBooks() []Book {
-	var newCollection = slices.Collect(maps.Values(catalog))
+func (catalog *Catalog) GetAllBooks() []Book {
+	var newCollection = slices.Collect(maps.Values(catalog.data))
 	for _, book := range newCollection {
 		fmt.Printf("This is the book %#v", book)
 	}
@@ -33,8 +38,8 @@ func (book Book) BookToString() string {
 
 }
 
-func (catalog Catalog) GetBook(ID string) (Book, bool) {
-	book, ok := catalog[ID]
+func (catalog *Catalog) GetBook(ID string) (Book, bool) {
+	book, ok := catalog.data[ID]
 	return book, ok
 }
 
@@ -46,23 +51,25 @@ func (book *Book) SetCopies(copies int) error {
 	fmt.Println("after update book.Copies =", book.Copies)
 	return nil
 }
-func OpenCatalog(path string) (Catalog, error) {
+func OpenCatalog(path string) (*Catalog, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
-	catalog := Catalog{}
-	var decoder = json.NewDecoder(file)
-	err = decoder.Decode(&catalog)
-	// err = json.NewDecoder(file).Decode(&catalog)
+	catalog := Catalog{
+		mu: &sync.RWMutex{},
+		data: map[string]Book{},
+	}
+	err = json.NewDecoder(file).Decode(&catalog.data)
 	if err != nil {
 		return nil, err
 	}
-	return catalog, nil
+	catalog.Path = path
+	return &catalog, nil
 }
 
-func (catalog Catalog) Sync(path string) error {
+func (catalog *Catalog) Sync(path string) error {
 	file, err := os.Create(path)
 	if err != nil {
 		return err
@@ -74,8 +81,8 @@ func (catalog Catalog) Sync(path string) error {
 	}
 	return nil
 }
-func (catalog Catalog) SetCopies(ID string, copies int) error {
-	book, ok := catalog[ID]
+func (catalog *Catalog) SetCopies(ID string, copies int) error {
+	book, ok := catalog.data[ID]
 	if !ok {
 		return fmt.Errorf("ID %q not found", ID)
 	}
@@ -83,15 +90,23 @@ func (catalog Catalog) SetCopies(ID string, copies int) error {
 	if err != nil {
 		return err
 	}
-	catalog[ID] = book
+	catalog.data[ID] = book
 	return nil
 
 }
-func (catalog Catalog) AddBook(book Book) error {
-    _, ok := catalog[book.ID]
-    if ok {
-        return fmt.Errorf("ID %q already exists", book.ID)
-    }
-    catalog[book.ID] = book
-    return nil
+func (catalog *Catalog) AddBook(book Book) error {
+	_, ok := catalog.data[book.ID]
+	if ok {
+		return fmt.Errorf("ID %q already exists", book.ID)
+	}
+	catalog.data[book.ID] = book
+	return nil
+}
+func (catalog *Catalog) GetCopies(ID string) (int, error) {
+	book, ok := catalog.data[ID]
+	if !ok {
+		return 0, fmt.Errorf("ID %q is not found", ID)
+
+	}
+	return book.Copies, nil
 }

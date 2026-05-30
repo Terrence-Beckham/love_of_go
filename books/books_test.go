@@ -7,22 +7,30 @@ import (
 	"testing"
 )
 
-func GetTestCatalog() books.Catalog {
-	return books.Catalog{
-		"abc": {
-			ID:     "abc",
-			Title:  "In the Company of Cheerful Ladies",
-			Author: "Alexander McCall Smith",
-			Copies: 1,
-		},
-		"xyz": {
-			ID:     "xyz",
-			Title:  "White Heat",
-			Author: "Dominic Sandbrook",
-			Copies: 2,
-		},
-	}
+func getTestCatalog() *books.Catalog {
+    catalog := books.NewCatalog()
+    err := catalog.AddBook(books.Book{
+        Title:  "In the Company of Cheerful Ladies",
+        Author: "Alexander McCall Smith",
+        Copies: 1,
+        ID:     "abc",
+    })
+    if err != nil {
+        panic(err)
+    }
+    err = catalog.AddBook(books.Book{
+        Title:  "White Heat",
+        Author: "Dominic Sandbrook",
+        Copies: 2,
+        ID:     "xyz",
+    })
+    if err != nil {
+        panic(err)
+    }
+    return catalog
 }
+
+
 func assertTestBooks(t *testing.T, got []books.Book) {
 	t.Helper()
 	want := []books.Book{
@@ -195,40 +203,60 @@ func TestSetCopies_OnCatalogModifiesSecifiedBook(t *testing.T) {
 	}
 }
 func TestAddBook_ReturnsErrorIfIDExists(t *testing.T) {
-    t.Parallel()
-    catalog := GetTestCatalog()
-    _, ok := catalog.GetBook("abc")
-    if !ok {
-        t.Fatal("book not present")
-    }
-    err := catalog.AddBook(books.Book{
-        ID:     "abc",
-        Title:  "In the Company of Cheerful Ladies",
-        Author: "Alexander McCall Smith",
-        Copies: 1,
-    })
-    if err == nil {
-        t.Fatal("want error for duplicate ID, got nil")
-    }
+	t.Parallel()
+	catalog := GetTestCatalog()
+	_, ok := catalog.GetBook("abc")
+	if !ok {
+		t.Fatal("book not present")
+	}
+	err := catalog.AddBook(books.Book{
+		ID:     "abc",
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
+	})
+	if err == nil {
+		t.Fatal("want error for duplicate ID, got nil")
+	}
 }
 func TestAddBook_AddsGivenBookToCatalog(t *testing.T) {
-    t.Parallel()
-    catalog := GetTestCatalog()
-    _, ok := catalog.GetBook("123")
-    if ok {
-        t.Fatal("book already present")
-    }
-    err := catalog.AddBook(books.Book{
-        ID:     "123",
-        Title:  "The Prize of all the Oceans",
-        Author: "Glyn Williams",
-        Copies: 2,
-    })
-    if err != nil {
-        t.Fatal(err)
-    }
-    _, ok = catalog.GetBook("123")
-    if !ok {
-        t.Fatal("added book not found")
-    }
+	t.Parallel()
+	catalog := GetTestCatalog()
+	_, ok := catalog.GetBook("123")
+	if ok {
+		t.Fatal("book already present")
+	}
+	err := catalog.AddBook(books.Book{
+		ID:     "123",
+		Title:  "The Prize of all the Oceans",
+		Author: "Glyn Williams",
+		Copies: 2,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, ok = catalog.GetBook("123")
+	if !ok {
+		t.Fatal("added book not found")
+	}
+}
+
+func TestSetCopies_IsRaceFree(t *testing.T) {
+	t.Parallel()
+	catalog := GetTestCatalog()
+	go func() {
+		for range 100 {
+			err := catalog.SetCopies("abc", 0)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}()
+	for range 100 {
+		_, err := catalog.GetCopies("abc")
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
 }
