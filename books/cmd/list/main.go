@@ -13,7 +13,7 @@ if err != nil{
 		return
 }
 	for _, book := range catalog.GetAllBooks() {
-		fmt.Println(book.BookToString())
+		fmt.Println(book.String())
 	}
 
 }
