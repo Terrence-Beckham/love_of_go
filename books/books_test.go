@@ -3,6 +3,8 @@ package books_test
 import (
 	"books"
 	"cmp"
+	"encoding/json"
+	"net/http"
 	"slices"
 	"testing"
 )
@@ -270,3 +272,32 @@ func TestNewCatalog_CreateEmptyCatalog(t *testing.T) {
 
 	}
 }
+
+
+func TestServerListsAllBooks(t *testing.T){
+	t.Parallel()
+	catalog := getTestCatalog()
+	catalog.Path = t.TempDir() + "/catalog"
+	go func(){
+		err:= books.ListenAndServe(":3000",catalog)
+		if err != nil {
+			panic(err)
+		}
+	}()
+	resp, err :=http.Get("http://localhost:3000")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK{
+		t.Fatalf("unexpected status %d",resp.StatusCode)
+	}
+	bookList := []books.Book{}
+		err = json.NewDecoder(resp.Body).Decode(&bookList)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assertTestBooks(t,bookList)
+	
+	}
+
