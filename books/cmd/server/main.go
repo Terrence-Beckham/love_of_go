@@ -1,14 +1,12 @@
 package main
-import(
+
+import (
 	"fmt"
-	"net/http"
+"net/http"
 )
-
-
-func main(){
-	http.ListenAndServe(":3000", http.HandlerFunc(hello))
+func main()  {
+	http.ListenAndServe(":3000",http.HandlerFunc(hello))
 }
-
 func hello(w http.ResponseWriter, r *http.Request)  {
-	fmt.Fprint(w, "Hello")
+fmt.Fprintln(w, "Hello, world")	
 }

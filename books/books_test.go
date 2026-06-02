@@ -4,6 +4,7 @@ import (
 	"books"
 	"cmp"
 	"encoding/json"
+	"net"
 	"net/http"
 	"slices"
 	"testing"
@@ -301,3 +302,12 @@ func TestServerListsAllBooks(t *testing.T){
 	
 	}
 
+func randomLocalAddr(t *testing.T)string  {
+	t.Helper()
+	l, err := net.Listen("tcp",":0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer l.Close()
+	return l.Addr().String()
+}
