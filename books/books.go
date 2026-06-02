@@ -59,6 +59,7 @@ func OpenCatalog(path string) (*Catalog, error) {
 
 func (catalog *Catalog) GetAllBooks() []Book {
 	catalog.mu.RLock()
+	
 	defer catalog.mu.RUnlock()
 	return slices.Collect(maps.Values(catalog.data))
 }

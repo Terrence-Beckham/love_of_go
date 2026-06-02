@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"slices"
 	"testing"
+	"io"
 )
 
 func getTestCatalog() *books.Catalog {
@@ -275,32 +276,76 @@ func TestNewCatalog_CreateEmptyCatalog(t *testing.T) {
 }
 
 
-func TestServerListsAllBooks(t *testing.T){
+func TestServerListsAllBooks(t *testing.T) {
 	t.Parallel()
+	addr := randomLocalAddr(t)
 	catalog := getTestCatalog()
 	catalog.Path = t.TempDir() + "/catalog"
-	go func(){
-		err:= books.ListenAndServe(":3000",catalog)
+	go func() {
+		err := books.ListenAndServe(addr, catalog)
 		if err != nil {
 			panic(err)
 		}
 	}()
-	resp, err :=http.Get("http://localhost:3000")
+	resp, err := http.Get("http://" + addr + "/v1/list")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK{
-		t.Fatalf("unexpected status %d",resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("unexpected status %d", resp.StatusCode)
 	}
 	bookList := []books.Book{}
-		err = json.NewDecoder(resp.Body).Decode(&bookList)
-		if err != nil {
-			t.Fatal(err)
-		}
-		assertTestBooks(t,bookList)
-	
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatal(err)
 	}
+	err = json.Unmarshal(data, &bookList)
+	if err != nil {
+		t.Fatalf("%v in %q", err, data)
+	}
+	assertTestBooks(t, bookList)
+}
+
+func TestFindFindsBookByID(t *testing.T) {
+	t.Parallel()
+	addr := randomLocalAddr(t)
+	catalog := getTestCatalog()
+	catalog.Path = t.TempDir() + "/catalog"
+	go func() {
+		err := books.ListenAndServe(addr, catalog)
+		if err != nil {
+			panic(err)
+		}
+	}()
+	resp, err := http.Get("http://" + addr + "/v1/find/abc")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("unexpected status %d", resp.StatusCode)
+	}
+	got := books.Book{}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = json.Unmarshal(data, &got)
+	if err != nil {
+		t.Fatalf("%v in %q", err, data)
+	}
+	want := books.Book{
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
+		ID:     "abc",
+	}
+	if want != got {
+		t.Fatalf("want %#v, got %#v", want, got)
+	}
+}
+
 
 func randomLocalAddr(t *testing.T)string  {
 	t.Helper()
