@@ -4,6 +4,7 @@ import (
 	"books"
 	"cmp"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -216,6 +217,7 @@ func TestServerListsAllBooks(t *testing.T) {
 		t.Fatal(err)
 	}
 	err = json.Unmarshal(data, &bookList)
+	// fmt.Printf("This is the booklist %#v",bookList)
 	if err != nil {
 		t.Fatalf("%v in %q", err, data)
 	}
@@ -246,10 +248,16 @@ func TestFindFindsBookByID(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	for _, element := range data {
+		// fmt.Printf("This is the current element %q ", string(element))
+		fmt.Println(string(element))
+	}
+
 	err = json.Unmarshal(data, &got)
 	if err != nil {
 		t.Fatalf("%v in %q", err, data)
 	}
+	fmt.Printf("This is the book after being unmarshalled %#q", got)
 	want := books.Book{
 		Title:  "In the Company of Cheerful Ladies",
 		Author: "Alexander McCall Smith",
