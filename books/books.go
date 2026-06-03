@@ -59,9 +59,25 @@ func OpenCatalog(path string) (*Catalog, error) {
 
 func (catalog *Catalog) GetAllBooks() []Book {
 	catalog.mu.RLock()
-	
 	defer catalog.mu.RUnlock()
 	return slices.Collect(maps.Values(catalog.data))
+}
+
+func (catalog *Catalog) GetBook(ID string) (Book, bool) {
+	catalog.mu.RLock()
+	defer catalog.mu.RUnlock()
+	book, ok := catalog.data[ID]
+	return book, ok
+}
+
+func (catalog *Catalog) GetCopies(ID string) (int, error) {
+	catalog.mu.RLock()
+	defer catalog.mu.RUnlock()
+	book, ok := catalog.data[ID]
+	if !ok {
+		return 0, fmt.Errorf("ID %q not found", ID)
+	}
+	return book.Copies, nil
 }
 
 func (catalog *Catalog) Sync() error {
@@ -88,23 +104,6 @@ func (catalog *Catalog) AddBook(book Book) error {
 	}
 	catalog.data[book.ID] = book
 	return nil
-}
-
-func (catalog *Catalog) GetBook(ID string) (Book, bool) {
-	catalog.mu.RLock()
-	defer catalog.mu.RUnlock()
-	book, ok := catalog.data[ID]
-	return book, ok
-}
-
-func (catalog *Catalog) GetCopies(ID string) (int, error) {
-	catalog.mu.RLock()
-	defer catalog.mu.RUnlock()
-	book, ok := catalog.data[ID]
-	if !ok {
-		return 0, fmt.Errorf("ID %q not found", ID)
-	}
-	return book.Copies, nil
 }
 
 func (catalog *Catalog) SetCopies(ID string, copies int) error {
