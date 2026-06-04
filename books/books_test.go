@@ -4,7 +4,6 @@ import (
 	"books"
 	"cmp"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -12,11 +11,23 @@ import (
 	"testing"
 )
 
-func TestGetAllBooks_ReturnsAllBooks(t *testing.T) {
-	t.Parallel()
-	catalog := getTestCatalog()
-	bookList := catalog.GetAllBooks()
-	assertTestBooks(t, bookList)
+var (
+	ABC = books.Book{
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
+		ID: "abc",
+	}
+)
+
+func TestGetAllBooks_OnClientListsAllBooks(t *testing.T) {
+    t.Parallel()
+    client := getTestClient(t)
+    bookList, err := client.GetAllBooks()
+    if err != nil {
+        t.Fatal(err)
+    }
+    assertTestBooks(t, bookList)
 }
 
 func TestOpenCatalog_ReadsSameDataWrittenBySync(t *testing.T) {
@@ -60,15 +71,10 @@ func TestNewCatalog_CreatesEmptyCatalog(t *testing.T) {
 	}
 }
 
-func TestGetBook_FindsBookInCatalogByID(t *testing.T) {
+func TestGetBook_OnClientFindsBookByID(t *testing.T) {
 	t.Parallel()
 	catalog := getTestCatalog()
-	want := books.Book{
-		ID:     "abc",
-		Title:  "In the Company of Cheerful Ladies",
-		Author: "Alexander McCall Smith",
-		Copies: 1,
-	}
+	want := ABC 
 	got, ok := catalog.GetBook("abc")
 	if !ok {
 		t.Fatal("book not found")
@@ -235,29 +241,13 @@ func TestFindFindsBookByID(t *testing.T) {
 			panic(err)
 		}
 	}()
-	resp, err := http.Get("http://" + addr + "/v1/find/abc")
+
+	client := books.NewClient(addr)
+	got, err := client.GetBook("abc")
 	if err != nil {
 		t.Fatal(err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("unexpected status %d", resp.StatusCode)
-	}
-	got := books.Book{}
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
-	for _, element := range data {
-		// fmt.Printf("This is the current element %q ", string(element))
-		fmt.Println(string(element))
 	}
 
-	err = json.Unmarshal(data, &got)
-	if err != nil {
-		t.Fatalf("%v in %q", err, data)
-	}
-	fmt.Printf("This is the book after being unmarshalled %#q", got)
 	want := books.Book{
 		Title:  "In the Company of Cheerful Ladies",
 		Author: "Alexander McCall Smith",
@@ -345,4 +335,17 @@ func randomLocalAddr(t *testing.T) string {
 	}
 	defer l.Close()
 	return l.Addr().String()
+}
+func getTestClient(t *testing.T) *books.Client {
+	t.Helper()
+	addr := randomLocalAddr(t)
+	catalog := getTestCatalog()
+	go func() {
+		err := books.ListenAndServe(addr, catalog)
+
+		if err != nil {
+			panic(err)
+		}
+	}()
+	return books.NewClient(addr)
 }

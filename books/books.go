@@ -21,6 +21,7 @@ func (book Book) String() string {
 		book.Title, book.Author, book.Copies)
 }
 
+
 func (book *Book) SetCopies(copies int) error {
 	if copies < 0 {
 		return fmt.Errorf("negative number of copies: %d", copies)
