@@ -5,7 +5,22 @@ import (
 	"testing"
 
 	"afrodroid.com/terrence/count"
+
+	"github.com/rogpeppe/go-internal/testscript"
 )
+
+func Test(t *testing.T) {
+	t.Parallel()
+	testscript.Run(t, testscript.Params{
+		Dir: "testdata/script",
+	})
+}
+
+func TestMain(m *testing.M) {
+	testscript.Main(m, map[string]func() {
+		"count": count.Main,
+	})
+}
 
 func TestCounterLinesInInput(t *testing.T) {
 	t.Parallel()
@@ -49,6 +64,7 @@ func TestWithInputFromArgs_IgnoresEmptyArgs(t *testing.T) {
 	want := 3
 	got := c.Lines()
 	if want != got {
-		t.Errorf("want %d, got %d",want, got)
+		t.Errorf("want %d, got %d", want, got)
 	}
 }
+

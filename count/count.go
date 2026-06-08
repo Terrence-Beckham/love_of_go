@@ -8,38 +8,29 @@ import (
 	"os"
 )
 
-type Counter struct {
+type counter struct {
 	input  io.Reader
 	output io.Writer
 }
-type option func(*Counter) error
+
+type option func(*counter) error
 
 func WithInput(input io.Reader) option {
-	return func(c *Counter) error {
+	return func(c *counter) error {
 		if input == nil {
 			return errors.New("nil input reader")
 		}
 		c.input = input
 		return nil
 	}
-
-}
-func WithOutput(output io.Writer) option {
-	return func(c *Counter) error {
-		if output == nil {
-			return errors.New("nil output reader")
-		}
-		c.output = output
-		return nil
-	}
 }
 
 func WithInputFromArgs(args []string) option {
-	return func(c *Counter) error {
-		f, err := os.Open(args[0])
+	return func(c *counter) error {
 		if len(args) < 1 {
 			return nil
 		}
+		f, err := os.Open(args[0])
 		if err != nil {
 			return err
 		}
@@ -48,10 +39,20 @@ func WithInputFromArgs(args []string) option {
 	}
 }
 
-func NewCounter(opts ...option) (*Counter, error) {
-	c := &Counter{
-		output: os.Stdout,
+func WithOutput(output io.Writer) option {
+	return func(c *counter) error {
+		if output == nil {
+			return errors.New("nil output writer")
+		}
+		c.output = output
+		return nil
+	}
+}
+
+func NewCounter(opts ...option) (*counter, error) {
+	c := &counter{
 		input:  os.Stdin,
+		output: os.Stdout,
 	}
 	for _, opt := range opts {
 		err := opt(c)
@@ -62,34 +63,22 @@ func NewCounter(opts ...option) (*Counter, error) {
 	return c, nil
 }
 
-func (c *Counter) Lines() int {
+func (c *counter) Lines() int {
 	lines := 0
 	input := bufio.NewScanner(c.input)
 	for input.Scan() {
 		lines++
 	}
-	if err := input.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "scan error:", err)
-	}
 	return lines
 }
+
 func Main() {
-	c, err := NewCounter()
+	c, err := NewCounter(
+		WithInputFromArgs(os.Args[1:]),
+	)
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 	fmt.Println(c.Lines())
 }
-
-// func (C *Counter) Count() {
-//     lines := 0
-//     input := bufio.NewScanner(os.Stdin)
-//     for input.Scan() {
-//         lines++
-//     }
-//     if err := input.Err(); err != nil {
-//         fmt.Fprintln(os.Stderr, "scan error:", err)
-//         return
-//     }
-//     fmt.Println(lines)
-// }
