@@ -245,6 +245,7 @@ func TestFindFindsBookByID(t *testing.T) {
 	client := books.NewClient(addr)
 	got, err := client.GetBook("abc")
 	if err != nil {
+	
 		t.Fatal(err)
 	}
 
@@ -345,7 +346,7 @@ func getTestClient(t *testing.T) *books.Client {
 
 		if err != nil {
 			panic(err)
-		}
+			}
 	}()
 	return books.NewClient(addr)
 }

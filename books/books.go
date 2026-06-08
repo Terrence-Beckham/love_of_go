@@ -119,5 +119,6 @@ func (catalog *Catalog) SetCopies(ID string, copies int) error {
 		return err
 	}
 	catalog.data[ID] = book
+	
 	return nil
 }
